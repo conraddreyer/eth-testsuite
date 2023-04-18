@@ -293,6 +293,9 @@ contract("MyContract", (accounts) => {
         );
       }
     });
+  });
+
+  describe("Interfaces", () => {
     it("should return true for supported interfaces", async () => {
       // Interface IDs für ERC721 und ERC165
       const erc721InterfaceId = "0x80ac58cd";
