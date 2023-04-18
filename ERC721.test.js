@@ -1,8 +1,8 @@
-// Tests standard implementation of ERC721 (+ Mint) 
 const { expect } = require("chai");
 const { utils } = require("web3");
 
 const MyContract = artifacts.require("MyContract");
+
 contract("MyContract", (accounts) => {
   const [alice, bob, charlie] = accounts;
   beforeEach(async () => {
@@ -243,7 +243,7 @@ contract("MyContract", (accounts) => {
 
   // Safe Transfer Errors
 
-  describe("SafesafeTTransfer Errors", () => {
+  describe("Safe Transfer Errors", () => {
     it("should throw an error if somebody other than the owner or approved tries to transfer a token", async () => {
       const tokenId = 0;
       await this.contract.mint(alice, tokenId, { from: alice });
@@ -292,6 +292,30 @@ contract("MyContract", (accounts) => {
           "caller is not token owner or approved"
         );
       }
+    });
+    it("should return true for supported interfaces", async () => {
+      // Interface IDs für ERC721 und ERC165
+      const erc721InterfaceId = "0x80ac58cd";
+      const erc165InterfaceId = "0x01ffc9a7";
+
+      const erc721Supported = await this.contract.supportsInterface(
+        erc721InterfaceId
+      );
+      const erc165Supported = await this.contract.supportsInterface(
+        erc165InterfaceId
+      );
+
+      expect(erc721Supported).to.equal(true);
+      expect(erc165Supported).to.equal(true);
+    });
+    it("should return false for unsupported interfaces", async () => {
+      // Eine willkürliche Interface-ID, die nicht unterstützt wird
+      const unsupportedInterfaceId = "0xffffffff";
+
+      const unsupported = await this.contract.supportsInterface(
+        unsupportedInterfaceId
+      );
+      expect(unsupported).to.equal(false);
     });
   });
 });
